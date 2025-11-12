@@ -1,32 +1,30 @@
 from django.test import TestCase
-from diary.models import Entry, Tag
 from django.contrib.auth import get_user_model
+from diary.models import Entry, Tag
 
 User = get_user_model()
 
-class EntryTestCase(TestCase):
+class EntryCaseTest(TestCase):
+
     def setUp(self):
-        self.user = User.objects.create_user(username="Donald")
-    
-    def test_cascade_delete(self):
+        self.author = User.objects.create_user(username="Vadim")
+
+    def test_case_delete(self):
         Entry.objects.create(
-            author=self.user,
-            title="test",
-            content="Hello, this is a test for the Entry model"
+            author=self.author,
+            title="test header",
+            content="Here is the content for Django tests"
             )
-        self.user.delete()
+        self.author.delete()
         self.assertEqual(Entry.objects.count(), 0)
-    
-    
-    def test_tags(self):
+
+    def test_case_many_to_many(self):
         entry = Entry.objects.create(
-            author=self.user,
-            title="test",
-            content="Hello, it's me, now we check the tag table"
-            )
-        tag = Tag.objects.create(name="My first tag")
+            author=self.author,
+            title="test header",
+            content="Here is the content for Django tests")
+        tag = Tag.objects.create(name="Developers")
         entry.tags.add(tag)
         self.assertEqual(entry.tags.count(), 1)
-        self.assertIn(entry, tag.entries.all()) # type: ignore
-
-
+        self.assertIn(entry, tag.entries.all())
+        
