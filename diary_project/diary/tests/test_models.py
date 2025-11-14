@@ -5,10 +5,22 @@ from diary.models import Entry, Tag
 
 User = get_user_model()
 
-class EntryCaseTest(TestCase):
+class TagCaseTest(TestCase):
+    """ We create one object for all tests """
+    @classmethod
+    def setUpTestData(cls):
+        cls.tag = Tag.objects.create(name="Training")
 
-        
-    '''Creates a new object each time for each test'''
+    """Test for the uniqueness of the tag name"""
+    def test_case_unique(self):
+        with self.assertRaises(IntegrityError):
+            Tag.objects.create(name="Training")
+    
+
+
+
+class EntryCaseTest(TestCase):
+    """ Creates a new object each time for each test """
     def setUp(self):
         self.author = User.objects.create_user(username="Vadim")
 
@@ -31,8 +43,3 @@ class EntryCaseTest(TestCase):
         self.assertEqual(self.entry.tags.count(), 1)
         self.assertIn(self.entry, tag.entries.all())
     
-    def test_case_unniquess(self):
-        '''We check the Tag model for uniqueness'''
-        with self.assertRaises(IntegrityError):
-            tag1 = Tag.objects.create(name="Developers")
-            tag2 = Tag.objects.create(name="Developers")
