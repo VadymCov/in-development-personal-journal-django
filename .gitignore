@@ -5,7 +5,7 @@
 *.pyc
 
 # settings IDE
-.vscode
-
+.vscode/
+.idea/
 # date base
 *.sqlite3
