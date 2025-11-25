@@ -47,3 +47,11 @@ class EntrySerializers(serializers.ModelSerializer):
         entry.tags.set(tags)
         return entry
     
+    def update(self, instance, validate_data):
+        tags = validate_data.pop("tags", None)
+        for attr, val in validate_data.items():
+            setattr(instance, attr, val )
+        instance.save()
+        if tags is not None:
+            instance.tags.set(tags)
+        return instance
